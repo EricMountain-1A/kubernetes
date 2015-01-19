@@ -59,13 +59,20 @@ func (h *delegateHandler) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 
 // TODO: replace this with clientcmd
 func GetAPIServerClient(authPath string, apiServerList util.StringList) (*client.Client, error) {
-	authInfo, err := clientauth.LoadFromFile(authPath)
-	if err != nil {
-		return nil, err
+	var authInfo *clientauth.Info
+	var err error
+	if authPath != "" {
+		authInfo, err = clientauth.LoadFromFile(authPath)
+		if err != nil {
+			return nil, err
+		}
 	}
-	clientConfig, err := authInfo.MergeWithConfig(client.Config{})
-	if err != nil {
-		return nil, err
+	clientConfig := client.Config{}
+	if authInfo != nil {
+		clientConfig, err = authInfo.MergeWithConfig(client.Config{})
+		if err != nil {
+			return nil, err
+		}
 	}
 	if len(apiServerList) < 1 {
 		return nil, fmt.Errorf("no api servers specified.")
