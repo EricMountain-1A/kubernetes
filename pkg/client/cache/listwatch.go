@@ -17,6 +17,7 @@ limitations under the License.
 package cache
 
 import (
+	"errors"
 	"github.com/GoogleCloudPlatform/kubernetes/pkg/client"
 	"github.com/GoogleCloudPlatform/kubernetes/pkg/labels"
 	"github.com/GoogleCloudPlatform/kubernetes/pkg/runtime"
@@ -34,22 +35,30 @@ type ListWatch struct {
 
 // ListWatch knows how to list and watch a set of apiserver resources.
 func (lw *ListWatch) List() (runtime.Object, error) {
-	return lw.Client.
-		Get().
-		Namespace(lw.Namespace).
-		Resource(lw.Resource).
-		SelectorParam("fields", lw.FieldSelector).
-		Do().
-		Get()
+	if lw.Client == nil {
+		return nil, errors.New("No API client: check preceding logs.")
+	} else {
+		return lw.Client.
+			Get().
+			Namespace(lw.Namespace).
+			Resource(lw.Resource).
+			SelectorParam("fields", lw.FieldSelector).
+			Do().
+			Get()
+	}
 }
 
 func (lw *ListWatch) Watch(resourceVersion string) (watch.Interface, error) {
-	return lw.Client.
-		Get().
-		Prefix("watch").
-		Namespace(lw.Namespace).
-		Resource(lw.Resource).
-		SelectorParam("fields", lw.FieldSelector).
-		Param("resourceVersion", resourceVersion).
-		Watch()
+	if lw.Client == nil {
+		return nil, errors.New("No API client: check preceding logs.")
+	} else {
+		return lw.Client.
+			Get().
+			Prefix("watch").
+			Namespace(lw.Namespace).
+			Resource(lw.Resource).
+			SelectorParam("fields", lw.FieldSelector).
+			Param("resourceVersion", resourceVersion).
+			Watch()
+	}
 }
