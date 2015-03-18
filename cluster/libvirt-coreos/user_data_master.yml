@@ -37,7 +37,7 @@ coreos:
         [Service]
         ExecStart=/opt/kubernetes/bin/kube-controller-manager \
         --master=127.0.0.1:8080 \
-        --machines=${machines}
+        --machines=${machines} --pod_eviction_timeout=20s
         Restart=always
         RestartSec=2
 

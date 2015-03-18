@@ -24,6 +24,7 @@ import (
 	"net/http"
 	"net/url"
 	"strconv"
+	"time"
 
 	"github.com/GoogleCloudPlatform/kubernetes/pkg/api"
 	"github.com/GoogleCloudPlatform/kubernetes/pkg/api/latest"
@@ -84,6 +85,7 @@ func NewKubeletClient(config *KubeletConfig) (KubeletClient, error) {
 
 	c := &http.Client{
 		Transport: transport,
+		Timeout:   time.Duration(10 * time.Second),
 	}
 	return &HTTPKubeletClient{
 		Client:      c,

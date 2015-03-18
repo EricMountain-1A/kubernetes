@@ -20,7 +20,7 @@ coreos:
     bind-addr: 0.0.0.0
     peer-addr: ${public_ip}:7001
     # peers: {etcd_peers}
-    discovery: ${discovery}
+    # discovery: ${discovery}
   units:
     - name: static.network
       command: start

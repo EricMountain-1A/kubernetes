@@ -1,0 +1,30 @@
+id: busybox
+kind: ReplicationController
+apiVersion: v1beta1
+desiredState:
+  replicas: 20
+  replicaSelector:
+    name: busybox
+  podTemplate:
+    desiredState:
+      manifest:
+        version: v1beta1
+        id: busybox
+        containers:
+          - name: busybox
+            image: busybox:latest
+            cpu: 10
+            volumeMounts:
+              - name: log
+                mountPath: /mnt
+            command:
+              - "/bin/sh"
+              - "-c"
+              - "trap 'trap - ; echo `hostname` `date` AT LAST, SIR TERRY, WE MUST WALK TOGETHER. >> /mnt/log.txt ; exit' INT STOP ERR ; while true ; do sleep 2 ; echo `hostname` `date` and all is well... >> /mnt/log.txt ; done"
+        volumes:
+          - name: log
+            source:
+              hostDir:
+                path: /tmp/busybox-log
+    labels:
+      name: busybox
