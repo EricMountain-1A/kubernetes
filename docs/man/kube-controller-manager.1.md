@@ -59,6 +59,9 @@ The kube-controller-manager has several options.
 **--pod_eviction_timeout**=5m
     The grace peroid for deleting pods on failed nodes.
 
+**--http_client_timeout**=10s
+    The timeout for HTTP requests to kubelets.
+
 **--sync_nodes**=true
     If true, and --cloud_provider is specified, sync nodes from the cloud provider. Default true.
 

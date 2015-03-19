@@ -78,8 +78,9 @@ func NewCMServer() *CMServer {
 		SyncNodeList:            true,
 		SyncNodeStatus:          true,
 		KubeletConfig: client.KubeletConfig{
-			Port:        ports.KubeletPort,
-			EnableHttps: false,
+			Port:              ports.KubeletPort,
+			EnableHttps:       false,
+			HttpClientTimeout: 10 * time.Second,
 		},
 	}
 	return &s
@@ -98,6 +99,7 @@ func (s *CMServer) AddFlags(fs *pflag.FlagSet) {
 		"fewer calls to cloud provider, but may delay addition of new nodes to cluster.")
 	fs.DurationVar(&s.ResourceQuotaSyncPeriod, "resource_quota_sync_period", s.ResourceQuotaSyncPeriod, "The period for syncing quota usage status in the system")
 	fs.DurationVar(&s.PodEvictionTimeout, "pod_eviction_timeout", s.PodEvictionTimeout, "The grace peroid for deleting pods on failed nodes.")
+	fs.DurationVar(&s.KubeletConfig.HttpClientTimeout, "http_client_timeout", s.HttpClientTimeout, "Response timeout for kubelet client HTTP requests.")
 	fs.IntVar(&s.RegisterRetryCount, "register_retry_count", s.RegisterRetryCount, ""+
 		"The number of retries for initial node registration.  Retry interval equals node_sync_period.")
 	fs.Var(&s.MachineList, "machines", "List of machines to schedule onto, comma separated.")

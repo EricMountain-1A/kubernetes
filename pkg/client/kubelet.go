@@ -84,6 +84,7 @@ func NewKubeletClient(config *KubeletConfig) (KubeletClient, error) {
 
 	c := &http.Client{
 		Transport: transport,
+		Timeout:   config.HttpClientTimeout,
 	}
 	return &HTTPKubeletClient{
 		Client:      c,
